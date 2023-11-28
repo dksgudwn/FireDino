@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "503591384511",
+    "firebase_url": "https://network-492c1-default-rtdb.firebaseio.com",
+    "project_id": "network-492c1",
+    "storage_bucket": "network-492c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:503591384511:android:887584f4fc699b45401d0a",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.network"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8afL857DsmWzo-v_ctewXmt7uyv9jVzA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
