@@ -214,24 +214,42 @@ public class AuthManager : Singleton<AuthManager>
         }
     }
 
+
+    private int consecutiveRewards = 0; // 연속 로그인 횟수를 저장할 변수
     public void OnRewardButton()
     {
         string date = GetNow();
-        // date2 = DateTime.Now.ToString("yyyyMMddHHmmss");
-        if (strLastLogin.Substring(0, 12).CompareTo(date.Substring(0, 12)) < 0)
+        if (long.Parse(date.Substring(0, 12)) - long.Parse(strLastLogin.Substring(0, 12)) > 0)
         {
-            strLastLogin = date;
-            DBref.Child("users").Child(User.UserId).Child("RewardLogin").SetValueAsync(date)
-                .ContinueWith(task =>
-                {
-                    if (task.IsCompleted)
+            if (long.Parse(date.Substring(0, 12)) - long.Parse(strLastLogin.Substring(0, 12)) == 1)
+            {
+                consecutiveRewards++;
+                strLastLogin = date;
+                DBref.Child("users").Child(User.UserId).Child("RewardLogin").SetValueAsync(date)
+                    .ContinueWith(task =>
                     {
-                        Debug.Log($"Reward LoginDate Updated:{date}");
-                    }
-                });
-            Debug.Log("보상 받음");
+                        if (task.IsCompleted)
+                        {
+                            Debug.Log($"Reward LoginDate Updated:{date}");
+                        }
+                    });
+                Debug.Log($"{consecutiveRewards}일차 보상 받음");
+            }
+            else if (long.Parse(date.Substring(0, 12)) - long.Parse(strLastLogin.Substring(0, 12)) > 1)
+            {
+                consecutiveRewards = 1;
+                strLastLogin = date;
+                DBref.Child("users").Child(User.UserId).Child("RewardLogin").SetValueAsync(date)
+                    .ContinueWith(task =>
+                    {
+                        if (task.IsCompleted)
+                        {
+                            Debug.Log($"Reward LoginDate Updated:{date}");
+                            Debug.Log($"연속 보상 초기화");
+                        }
+                    });
+            }
         }
-
     }
 
     public void LoginButton()
