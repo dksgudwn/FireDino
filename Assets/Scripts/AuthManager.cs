@@ -245,9 +245,10 @@ public class AuthManager : Singleton<AuthManager>
                         if (task.IsCompleted)
                         {
                             Debug.Log($"Reward LoginDate Updated:{date}");
-                            Debug.Log($"연속 보상 초기화");
+                            Debug.Log($"{consecutiveRewards}일차 보상 받음");
                         }
                     });
+                Debug.Log($"연속 보상 초기화");
             }
         }
     }
@@ -395,5 +396,9 @@ public class AuthManager : Singleton<AuthManager>
                 // Password changed successfully, you can handle this case accordingly
             }
         }
+    }
+    private IEnumerator GetUsers()
+    {
+        yield return null;
     }
 }
