@@ -37,6 +37,7 @@ public class AuthManager : Singleton<AuthManager>
     public TMP_Text userNameText;
     private string strWeather;
     private string strLastLogin;
+    public TMP_Text friendTxt;
 
     private void Awake()
     {
@@ -397,8 +398,85 @@ public class AuthManager : Singleton<AuthManager>
             }
         }
     }
-    private IEnumerator GetUsers()
+
+    public void LoadUser()
     {
-        yield return null;
+        StartCoroutine(LoadFriend());
+    }
+
+    IEnumerator LoadFriend()
+    {
+        var DBTask = DBref.Child("users").GetValueAsync();
+        yield return new WaitUntil(() => DBTask.IsCompleted);
+        if (DBTask.Exception != null)
+        {
+            Debug.LogWarning($"Save task failed with {DBTask.Exception}");
+        }
+        else
+        {
+            DataSnapshot snapshot = DBTask.Result;
+            friendTxt.text = "";
+            foreach (var snap in snapshot.Children)
+            {
+                IDictionary data = (IDictionary)snap.Value;
+
+                string userId = snap.Key;
+                //string lastLogin = data["LastLogin"].ToString();
+                string userName = data["UserName"].ToString();
+
+                Debug.Log($"{userName} User");
+                friendTxt.text += $"{userName} user \n";
+            }
+
+            Debug.Log("己傍");
+        }
+    }
+
+    public void AddFriend()
+    {
+        StartCoroutine(AddToFriend());
+    }
+
+    IEnumerator AddToFriend()
+    {
+        var DBTask = DBref.Child("users").GetValueAsync();
+        yield return new WaitUntil(() => DBTask.IsCompleted);
+
+        var DBTasks = DBref.Child("users").Child(User.UserId).Child("UserName").GetValueAsync();
+        yield return new WaitUntil(() => DBTasks.IsCompleted);
+
+        List<string> friends = new List<string>();
+        if (DBTask.Exception != null)
+        {
+            Debug.LogWarning($"Save task failed with {DBTask.Exception}");
+        }
+        else
+        {
+            DataSnapshot snapshot = DBTask.Result;
+            DataSnapshot snapshot2 = DBTasks.Result;
+            foreach (var snap in snapshot.Children)
+            {
+                IDictionary data = (IDictionary)snap.Value;
+
+                string userId = snap.Key;
+                //string lastLogin = data["LastLogin"].ToString();
+                string userName = data["UserName"].ToString();
+                if ((string)snapshot2.Value != userName)
+                {
+                    friends.Add(userName);
+                }
+            }
+            var dbtask = DBref.Child("users").Child(User.UserId).Child("Friends").SetValueAsync(friends);
+            yield return new WaitUntil(() => dbtask.IsCompleted);
+            if (dbtask.Exception != null)
+            {
+                Debug.LogWarning($"Save task failed with {dbtask.Exception}");
+            }
+            else
+            {
+                print("模备 眠啊");
+            }
+            Debug.Log("己傍");
+        }
     }
 }
