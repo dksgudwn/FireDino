@@ -27,8 +27,8 @@ public class UIManager : Singleton<UIManager>
     public void CloseLogin()
     {
         loginUI.SetActive(false);
-        user.SetActive(true);
         playUI.SetActive(true);
+        user.SetActive(true);
     }
 
     public void ChangePassword()
