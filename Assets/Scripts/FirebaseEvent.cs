@@ -5,24 +5,27 @@ using UnityEngine;
 
 public class FirebaseEvent : MonoBehaviour
 {
-    public GameObject particleSnow;
-    public GameObject particleRain;
+    Camera cam;
 
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main;
         //劾松 戚坤闘
         string strWeather = AuthManager.Instance.GetWeather();
         Console.WriteLine(strWeather);
         switch (strWeather)
         {
-            case "Snow":
-                particleSnow.SetActive(true);
-                Debug.Log("Snow");
+            case "Night":
+                cam.backgroundColor = Color.black;
+                Debug.Log("鴻");
                 break;
-            case "Rain":
-                particleRain.SetActive(true);
-                Debug.Log("Rain");
+            case "Afternoon":
+                cam.backgroundColor = Color.white;
+                Debug.Log("碍");
+                break;
+
+                default: Debug.Log("しししししししししししししししししししし");
                 break;
         }
 
@@ -31,6 +34,6 @@ public class FirebaseEvent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
